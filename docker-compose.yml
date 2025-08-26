@@ -1,0 +1,34 @@
+version: "3.8"
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: nexa_erp_app
+    restart: always
+    ports:
+      - "3000:3000"
+    depends_on:
+      - postgres
+      - redis
+  postgres:
+    restart: always
+    image: postgres:15.3-alpine3.18
+    container_name: nexa_erp_db
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: nexa_erp
+
+  redis:
+    restart: always
+    image: redis
+    container_name: nexa_erp_cache
+    expose:
+      - 6379
+
+volumes:
+  postgres_data:
+  redis_data:
