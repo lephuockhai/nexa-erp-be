@@ -3,26 +3,25 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+enum Role {
+  SUPPER_ADMIN
+  ADMIN
+  USER
+  MANAGER
+  EMPLOYEE
 }
 
 model User {
-  id Int @id @default(autoincrement())
-  name String
-  email String @unique
-  password String
-  posts Post[]
-  
+  id                  String       @id       @default(uuid())
+  name                String            
+  email               String       @unique
+  phone               String       @unique
+  password_hash       String
+  is_active           Boolean
+  last_login_at       DateTime
+  role                Role                   @default(USER)
   @@map("users")
-}
-
-model Post {
-  id Int @id @default(autoincrement())
-  title String
-  content String
-  userId Int @map("user_id")
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@map("posts")
 }
