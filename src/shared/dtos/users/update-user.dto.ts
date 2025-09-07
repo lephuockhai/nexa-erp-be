@@ -1,13 +1,20 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Role } from '@prisma/client';
 
-export class CreateUserDto {
-  id?: string;
+export class UpdateUserDto {
+  @ApiProperty({
+    example: 'id123123',
+  })
+  id: string;
 
   @ApiProperty({
     example: 'John Doe',
   })
   name: string;
+
+  @ApiProperty({
+    example: false,
+  })
+  is_active: boolean;
 
   @ApiProperty({
     example: 'johndoe@example.com',
@@ -18,14 +25,4 @@ export class CreateUserDto {
     example: '0123456789',
   })
   phone: string;
-
-  @ApiProperty({
-    example: '123456',
-  })
-  password: string;
-
-  @ApiProperty({
-    example: 'USER',
-  })
-  role: Role;
 }

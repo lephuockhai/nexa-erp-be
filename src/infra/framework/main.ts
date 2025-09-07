@@ -6,11 +6,7 @@ import { AppModule } from './app.module';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  const config = new DocumentBuilder()
-    .setTitle('API')
-    .addTag('users')
-    .addTag('posts')
-    .build();
+  const config = new DocumentBuilder().setTitle('API').addTag('users').build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('/', app, document);
 
