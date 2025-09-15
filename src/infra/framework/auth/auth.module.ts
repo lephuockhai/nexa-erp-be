@@ -9,11 +9,14 @@ import { GenerateOTP } from '@/use-cases/otp/generate-otp/generate-otp.use-case'
 import { FindByPhoneUseCase } from '@/use-cases/otp/find-by-phone/find-by-phone.use-case';
 import { UsersRepository } from '@/core/repositories/users.repository';
 import { PrismaOTPRepository } from '@/infra/data/prisma/prisma-otp.repository';
+import { LoginUseCase } from '@/use-cases/auth/login/login.use-case';
+import { JwtService } from '@nestjs/jwt';
 
 @Module({
   controllers: [AuthController],
   providers: [
     PrismaService,
+    JwtService,
     {
       provide: OTPRepository,
       useFactory: (prisma: PrismaService) => new PrismaOTPRepository(prisma),
@@ -51,6 +54,12 @@ import { PrismaOTPRepository } from '@/infra/data/prisma/prisma-otp.repository';
         findByPhoneUseCase: FindByPhoneUseCase,
       ) => new VerifyOTPUseCase(repository, findByPhoneUseCase),
       inject: [OTPRepository, FindByPhoneUseCase],
+    },
+    {
+      provide: LoginUseCase,
+      useFactory: (userRepo: UsersRepository, jwtService: JwtService) =>
+        new LoginUseCase(userRepo, jwtService),
+      inject: [UsersRepository, JwtService],
     },
   ],
 })
