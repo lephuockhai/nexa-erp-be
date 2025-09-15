@@ -17,11 +17,11 @@ export class PrismaUsersRepository implements UsersRepository {
     return this.prisma.user.findUnique({ where: filter });
   }
 
-  async update(id: number, data: Partial<UserEntity>): Promise<UserEntity> {
+  async update(id: string, data: Partial<UserEntity>): Promise<UserEntity> {
     return this.prisma.user.update({ where: { id }, data });
   }
 
-  async remove(id: number): Promise<void> {
+  async remove(id: string): Promise<void> {
     await this.prisma.user.delete({ where: { id } });
   }
 }

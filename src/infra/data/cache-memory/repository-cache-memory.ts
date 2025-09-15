@@ -12,7 +12,7 @@ export class RepositoryCacheMemory<
   }
 
   async create(data: TEntity): Promise<TEntity> {
-    data.id = this.items.length > 0 ? this.items.slice(-1)[0].id + 1 : 1;
+    data.id = `id${this.items?.length + 1}`;
     const count = this.items.push(data);
     return this.items[count - 1];
   }
@@ -31,7 +31,7 @@ export class RepositoryCacheMemory<
     );
   }
 
-  async update(id: number, data: Partial<TEntity>): Promise<TEntity> {
+  async update(id: string, data: Partial<TEntity>): Promise<TEntity> {
     const index = this.getIndexById(id);
     if (index === -1) {
       // TODO: handle the case of not finding the item to update
@@ -42,7 +42,7 @@ export class RepositoryCacheMemory<
     return this.items[index];
   }
 
-  async remove(id: number): Promise<void> {
+  async remove(id: string): Promise<void> {
     const index = this.getIndexById(id);
     if (index === -1) {
       // TODO: handle the case of not finding the item to be deleted
@@ -50,7 +50,7 @@ export class RepositoryCacheMemory<
     this.items.splice(index, 1);
   }
 
-  private getIndexById(id: number) {
+  private getIndexById(id: string) {
     return this.items.findIndex((item) => item.id === id);
   }
 }

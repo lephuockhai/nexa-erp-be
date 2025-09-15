@@ -19,6 +19,10 @@ export class CreatedUserMapper implements Mapper<CreatedUserDto, UserEntity> {
     user.id = data.id;
     user.name = data.name;
     user.email = data.email;
+    user.phone = data.phone;
+    user.is_active = data.is_active;
+    user.last_login_at = data.last_login_at;
+    user.role = data.role;
 
     return user;
   }

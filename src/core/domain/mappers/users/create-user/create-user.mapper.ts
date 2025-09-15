@@ -8,7 +8,11 @@ export class CreateUserMapper extends Mapper<CreateUserDto, UserEntity> {
 
     user.name = data.name;
     user.email = data.email;
-    user.password = data.password;
+    user.phone = data.phone;
+    user.password_hash = data.password;
+    user.is_active = false;
+    user.last_login_at = new Date();
+    user.role = data.role;
 
     return user;
   }
@@ -19,7 +23,8 @@ export class CreateUserMapper extends Mapper<CreateUserDto, UserEntity> {
     user.id = data.id;
     user.name = data.name;
     user.email = data.email;
-    user.password = data.password;
+    user.password = data.password_hash;
+    user.role = data.role;
 
     return user;
   }
