@@ -50,6 +50,12 @@ export class RepositoryCacheMemory<
     this.items.splice(index, 1);
   }
 
+  async findById(id: string): Promise<TEntity> {
+    return this.findById(id).then((item) => {
+      return item;
+    });
+  }
+
   private getIndexById(id: string) {
     return this.items.findIndex((item) => item.id === id);
   }

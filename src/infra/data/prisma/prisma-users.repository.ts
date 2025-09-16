@@ -24,4 +24,8 @@ export class PrismaUsersRepository implements UsersRepository {
   async remove(id: string): Promise<void> {
     await this.prisma.user.delete({ where: { id } });
   }
+
+  async findById(id: string): Promise<UserEntity> {
+    return this.prisma.user.findUnique({ where: { id } });
+  }
 }
