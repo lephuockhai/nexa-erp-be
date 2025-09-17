@@ -6,16 +6,9 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
-enum Role {
-  SUPPER_ADMIN
-  ADMIN
-  USER
-  MANAGER
-  EMPLOYEE
-}
 
 model User {
-  id                  String       @id        @default(uuid())
+  id                  String       @id
   name                String            
   email               String       @unique
   phone               String       @unique
@@ -24,12 +17,12 @@ model User {
   last_login_at       DateTime
   createdAt           DateTime                @default(now())
   updatedAt           DateTime                @updatedAt
-  role                Role                    @default(USER)
+  role                UserRole[]
   @@map("users")
 }
 
 model Otp {
-  id                  String       @id        @default(uuid())
+  id                  String       @id
   phone               String
   code                String
   expiredAt           DateTime
@@ -37,4 +30,53 @@ model Otp {
   updatedAt           DateTime                @updatedAt
 
   @@map("otp")
+}
+
+model Role {
+  id                  String       @id 
+  name                String                  @unique
+  description         String?
+  createdAt           DateTime                @default(now())
+  updatedAt           DateTime                @updatedAt
+
+  users               UserRole[]
+  permissions         RolePermission[]
+  @@map("roles")
+}
+
+model Permission {
+  id                  String       @id
+  name                String                  @unique
+  description         String?
+  createdAt           DateTime                @default(now())
+  updatedAt           DateTime                @updatedAt
+
+  roles       RolePermission[]
+  @@map("permissions")
+}
+
+// Bảng trung gian User - Role (N-N)
+model UserRole {
+  user_id             String
+  role_id             String
+  assignedAt          DateTime @default(now())
+
+  user                User                    @relation(fields: [user_id], references: [id])
+  role                Role                    @relation(fields: [role_id], references: [id])
+
+  @@id([user_id, role_id])
+  @@map("user_roles")
+}
+
+// Bảng trung gian Role - Permission (N-N)
+model RolePermission {
+  role_id             String
+  permission_id       String
+  assignedAt          DateTime @default(now())
+
+  role                Role                    @relation(fields: [role_id], references: [id])
+  permission          Permission              @relation(fields: [permission_id], references: [id])
+
+  @@id([role_id, permission_id])
+  @@map("role_permissions")
 }

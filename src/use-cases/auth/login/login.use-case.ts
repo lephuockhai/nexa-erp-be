@@ -43,7 +43,6 @@ export class LoginUseCase implements UseCase<LogedinDto | Response> {
     // generate token
     const payload = {
       sub: user.id,
-      role: user.role,
       email: user.email,
     };
     // access token (ngắn hạn)

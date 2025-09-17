@@ -1,5 +1,4 @@
 import { Entity } from '@/core/base/entity';
-import { Role } from '@prisma/client';
 
 export class UserEntity extends Entity {
   name: string;
@@ -8,5 +7,4 @@ export class UserEntity extends Entity {
   password_hash: string;
   is_active: boolean;
   last_login_at: Date;
-  role: Role;
 }

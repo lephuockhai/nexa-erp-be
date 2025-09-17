@@ -34,7 +34,6 @@ export class RefreshUseCase implements UseCase<LogedinDto | Response> {
       // generate token
       const newPayload = {
         sub: user.id,
-        role: user.role,
         email: user.email,
       };
       // Refresh new token
