@@ -11,6 +11,8 @@ import { UsersRepository } from '@/core/repositories/users.repository';
 import { PrismaOTPRepository } from '@/infra/data/prisma/prisma-otp.repository';
 import { LoginUseCase } from '@/use-cases/auth/login/login.use-case';
 import { JwtService } from '@nestjs/jwt';
+import { RefreshUseCase } from '@/use-cases/auth/refresh';
+import { MeUseCase } from '@/use-cases/auth/me';
 
 @Module({
   controllers: [AuthController],
@@ -60,6 +62,17 @@ import { JwtService } from '@nestjs/jwt';
       useFactory: (userRepo: UsersRepository, jwtService: JwtService) =>
         new LoginUseCase(userRepo, jwtService),
       inject: [UsersRepository, JwtService],
+    },
+    {
+      provide: RefreshUseCase,
+      useFactory: (userRepo: UsersRepository, jwtService: JwtService) =>
+        new RefreshUseCase(userRepo, jwtService),
+      inject: [UsersRepository, JwtService],
+    },
+    {
+      provide: MeUseCase,
+      useFactory: (userRepo: UsersRepository) => new MeUseCase(userRepo),
+      inject: [UsersRepository],
     },
   ],
 })

@@ -2,9 +2,11 @@ import { UseCase } from '@/core/base/use-case';
 import { LoginMapper } from '@/core/domain/mappers/auth/login';
 import { CreatedUserMapper } from '@/core/domain/mappers/users/created-user';
 import { UsersRepository } from '@/core/repositories/users.repository';
+import { jwtConstants } from '@/shared/constant';
 import { LogedinDto } from '@/shared/dtos/auth/logedin.dto';
 import { LoginDto } from '@/shared/dtos/auth/login.dto';
 import { VerifiedPassword } from '@/shared/utils/password';
+import { UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 
 type Response = {
@@ -36,27 +38,22 @@ export class LoginUseCase implements UseCase<LogedinDto | Response> {
       data.password,
       user.password_hash,
     );
-    if (!user || !matchingPass) {
-      return {
-        message: 'Info login is incorrect',
-        code: 401,
-      };
-    }
+    if (!user || !matchingPass)
+      throw new UnauthorizedException('Info login is incorrect');
     // generate token
     const payload = {
       sub: user.id,
-      role: user.role,
       email: user.email,
     };
     // access token (ngắn hạn)
     const accessToken = this.jwtService.sign(payload, {
-      secret: process.env.JWT_SECRET,
-      expiresIn: '1d',
+      secret: jwtConstants.secretAccess,
+      expiresIn: '15m',
     });
 
     // refresh token (dài hạn)
     const refreshToken = this.jwtService.sign(payload, {
-      secret: process.env.JWT_REFRESH_SECRET,
+      secret: jwtConstants.secretRefresh,
       expiresIn: '7d',
     });
 

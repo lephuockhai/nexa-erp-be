@@ -1,12 +1,18 @@
 import { OTPEntity } from '@/core/domain/entities/otp.entity';
 import { OTPRepository } from '@/core/repositories/otp.repository';
 import { PrismaService } from '@/infra/data/prisma/prisma.service';
+import { ulid } from 'ulid';
 
 export class PrismaOTPRepository implements OTPRepository {
   constructor(private prisma: PrismaService) {}
 
   async create(data: OTPEntity): Promise<OTPEntity> {
-    return this.prisma.otp.create({ data });
+    return this.prisma.otp.create({
+      data: {
+        ...data,
+        id: `otp_${ulid()}`,
+      },
+    });
   }
 
   async findAll(filter?: Partial<OTPEntity>): Promise<OTPEntity[]> {
